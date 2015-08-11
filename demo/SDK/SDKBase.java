@@ -1,9 +1,11 @@
 package com.zulong.sdk.core.open;
 
 import android.app.Activity;
+import java.util.HashMap;
+import java.util.Timer;
 
 import com.zulong.sdk.core.open.SDKInterface;
-
+import com.zulong.sdk.core.util.LogUtil;
 
 public abstract class SDKBase extends SDKImpl
 {
@@ -93,14 +95,14 @@ public abstract class SDKBase extends SDKImpl
   {
     this.mChannelInitState = InitState.success;
     this.mInitMsg = msg;
-    //notifyInitResult();
+    notifyInitResult();
   }
 
   protected void initFailed(String msg)
   {
     this.mChannelInitState = InitState.fail;
     this.mInitMsg = msg;
-    //notifyInitResult();
+    notifyInitResult();
   }
   
   private synchronized void notifyInitResult()
@@ -120,6 +122,41 @@ public abstract class SDKBase extends SDKImpl
     });
   }  
   
+  public void doLogin(final SDKInterface.LoginCallBack loginCallBack)
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        if (SDKBase.this.mLoginCallBack == null)
+          throw new RuntimeException("loginCallBack is null");
+        SDKBase.this.mLoginCallBack = SDKBase.this.mLoginCallBack;
+        if ((SDKBase.this.checkInterval(SDKBase.IntervalType.LOGIN)) && (SDKBase.this.checkInit()))
+          SDKBase.this.doLoginImpl();
+      }
+    });
+  }
+  
+  private boolean checkInit()
+  {
+    if ((this.mOnesdkInitState != InitState.success) || (this.mChannelInitState != InitState.success))
+      throw new RuntimeException("Î´³õÊ¼»¯");
+    return true;
+  }
+  
+  private boolean checkInterval(IntervalType intervalType)
+  {
+//    long l1 = System.currentTimeMillis();
+//    long l2 = null == this.lastTimeHashMap.get(intervalType) ? 0L : ((Long)this.lastTimeHashMap.get(intervalType)).longValue();
+//    if (l1 - l2 > 2000L)
+//    {
+//      this.lastTimeHashMap.put(intervalType, Long.valueOf(l1));
+//      return true;
+//    }
+//    this.lastTimeHashMap.put(intervalType, Long.valueOf(l1));
+//    LogUtil.e(TAG, "less than 2000 milliseconds between two requests," + intervalType);
+    return false;
+  }
   
   //Status  
 	private static enum InitState
