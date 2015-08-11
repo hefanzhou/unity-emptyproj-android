@@ -1,5 +1,10 @@
 package com.zulong.sdk.core.open;
 
+import android.app.Activity;
+
+import com.zulong.sdk.core.open.SDKInterface;
+
+
 public abstract class SDKBase extends SDKImpl
 {
   private static final String TAG = SDKBase.class.getName();
@@ -11,15 +16,15 @@ public abstract class SDKBase extends SDKImpl
   private int mChannelId;
   private String mChannelName;
   private volatile boolean mHasLogin = false;
-  //private volatile InitState mChannelInitState = InitState.process;
-  //private volatile InitState mOnesdkInitState = InitState.process;
+  private volatile InitState mChannelInitState = InitState.process;
+  private volatile InitState mOnesdkInitState = InitState.process;
   private volatile String mInitMsg;
   protected SDKInterface.InitCallBack mInitCallBack;
   protected SDKInterface.LoginCallBack mLoginCallBack;
   protected SDKInterface.PayCallBack mPayCallBack;
   protected SDKInterface.LogoutCallBack mLogoutCallBack;
   //private ConfigReader mConfigReader;
-  //private String mConfigFilePath;
+  private String mConfigFilePath;
   private static volatile SDKBase INSTANCE;
   private String commonOrderMsg;
   private static final String FLASH_PIC_PORTRAIT = "common_flash_portrait.png";
@@ -27,6 +32,13 @@ public abstract class SDKBase extends SDKImpl
   private static final int FLASH_TIMER_TIME_MILLISECEND = 3000;
   //private HashMap<IntervalType, Long> lastTimeHashMap = new HashMap();
 
+
+
+  public static SDKBase getInstance(Activity activity)
+  {
+    mActivity = activity;
+		return null;
+  }
 
   public void init(int appId, String appKey, SDKInterface.InitCallBack initCallBack)
   {
@@ -38,5 +50,90 @@ public abstract class SDKBase extends SDKImpl
 
   }  
   
+  private void doInitImpl()
+  {
+    this.mChannelInitState = InitState.process;
+    initImpl();
+  }
   
+  public void setConfigFilePath(String configFilePath)
+  {
+    this.mConfigFilePath = configFilePath;
+  }
+  
+  public static Activity getActivity()
+  {
+    return mActivity;
+  }
+
+   protected void logoutSucceed()
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        SDKBase.this.mLogoutCallBack.succeed();
+        //SDKBase.this.dismissFloatView(SDKBase.getActivity());
+      }
+    });
+  }
+
+  protected void logoutFailed(final String msg)
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        SDKBase.this.mLogoutCallBack.failed(msg);
+      }
+    });
+  }
+  
+  protected void initSucceed(String msg)
+  {
+    this.mChannelInitState = InitState.success;
+    this.mInitMsg = msg;
+    //notifyInitResult();
+  }
+
+  protected void initFailed(String msg)
+  {
+    this.mChannelInitState = InitState.fail;
+    this.mInitMsg = msg;
+    //notifyInitResult();
+  }
+  
+  private synchronized void notifyInitResult()
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        if ((SDKBase.this.mOnesdkInitState == SDKBase.InitState.success) && (SDKBase.this.mChannelInitState == SDKBase.InitState.success))
+        {
+          SDKBase.this.mInitCallBack.initSucceed(SDKBase.this.mInitMsg);
+          return;
+        }
+        if ((SDKBase.this.mOnesdkInitState == SDKBase.InitState.fail) || (SDKBase.this.mChannelInitState == SDKBase.InitState.fail))
+          SDKBase.this.mInitCallBack.initFailed(SDKBase.this.mInitMsg);
+      }
+    });
+  }  
+  
+  
+  //Status  
+	private static enum InitState
+  {
+    success, process, fail;
+  }
+
+  private static enum IntervalType
+  {
+    INIT, LOGIN, PAY, LOGOUT;
+  }
+
+  public static enum UserInfoType
+  {
+    CREATE_ROLE, LOGIN, ROLE_LEVEL_CHANGE;
+  }
 }

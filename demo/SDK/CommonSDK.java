@@ -1,6 +1,11 @@
 package  com.zulong.unisdk;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import com.zulong.sdk.core.open.SDKBase;
+import com.zulong.sdk.core.open.SDKInterface;
+
 
 public final class CommonSDK extends SDKBase
 {
@@ -9,10 +14,10 @@ public final class CommonSDK extends SDKBase
   private static final String TAG = CommonSDK.class.getName();
   private static final String VERSION = "0.0.1";
 
-  private boolean validateOrderParams(OrderParams paramOrderParams)
-  {
-		return true;
-  }
+//  private boolean validateOrderParams(OrderParams paramOrderParams)
+//  {
+//		return true;
+//  }
 
   protected void destroyFloatViewImpl()
   {
@@ -37,15 +42,15 @@ public final class CommonSDK extends SDKBase
 		Log.i(TAG, "doLogoutImpl");
   }
 
-  public void doPay(OrderParams paramOrderParams, SDKInterface.PayCallBack paramPayCallBack)
-  {
-		Log.i(TAG, "doPay");
-  }
+//  public void doPay(OrderParams paramOrderParams, SDKInterface.PayCallBack paramPayCallBack)
+//  {
+//		Log.i(TAG, "doPay");
+//  }
 
-  protected void doPayImpl(OrderParams paramOrderParams)
-  {
-    paySucceed("paySucceed");
-  }
+//  protected void doPayImpl(OrderParams paramOrderParams)
+//  {
+//    paySucceed("paySucceed");
+//  }
 
   public int getChannelId()
   {
