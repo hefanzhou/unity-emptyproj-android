@@ -71,7 +71,7 @@ public abstract class SDKBase extends SDKImpl
           //SDKCoreFacade.getInstance().init(SDKBase.mActivity, SDKBase.this.mAppId, SDKBase.this.mAppKey, SDKBase.this.mChannelId);
           //SDKCoreFacade.getInstance().setLoginSchemeVersion(SDKBase.this.getLoginSchemeVersion());
           SDKBase.this.readConfig(appId, appKey, SDKBase.this.getVersion(), configFileName, SDKBase.this.getConfigReader());
-          //SDKBase.this.tryFlash();
+          SDKBase.this.tryFlash();
           SDKBase.this.doInitImpl();
           return;
         }
@@ -83,6 +83,12 @@ public abstract class SDKBase extends SDKImpl
       }
     });
   } 
+  
+  private void tryFlash()
+  {
+  	onOnesdkInitSuccess();
+  	notifyInitResult();
+  }
   
   private void onOnesdkInitSuccess()
   {
