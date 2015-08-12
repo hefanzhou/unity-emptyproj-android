@@ -1,16 +1,17 @@
 package  com.zulong.unisdk;
 
+import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.zulong.sdk.core.open.SDKBase;
 import com.zulong.sdk.core.open.SDKInterface;
-
+import com.zulong.sdk.core.config.ConfigReader;
 
 public final class CommonSDK extends SDKBase
 {
   private static final int CHANNEL_ID = 9;
-  private static final String CHANNEL_NAME = "OneSDK";
+  private static final String CHANNEL_NAME = "UniSDK";
   private static final String TAG = CommonSDK.class.getName();
   private static final String VERSION = "0.0.1";
 
@@ -62,6 +63,11 @@ public final class CommonSDK extends SDKBase
     return "OneSDK";
   }
 
+  protected ConfigReader getConfigReader()
+  {
+    Activity localActivity = getActivity();
+    return new CommonConfigReader(localActivity);
+  }
 
   protected String getVersion()
   {

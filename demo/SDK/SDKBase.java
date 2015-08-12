@@ -47,7 +47,7 @@ public abstract class SDKBase extends SDKImpl
 
   public void init(int appId, String appKey, SDKInterface.InitCallBack initCallBack)
   {
-    init(appId, appKey, "OneSDK.config", initCallBack);
+    init(appId, appKey, DEFAULT_CONFIG_FILE_NAME, initCallBack);
   }
 
   public void init(final int appId,final String appKey,final String configFileName,final SDKInterface.InitCallBack initCallBack)
@@ -70,7 +70,7 @@ public abstract class SDKBase extends SDKImpl
         {
           //SDKCoreFacade.getInstance().init(SDKBase.mActivity, SDKBase.this.mAppId, SDKBase.this.mAppKey, SDKBase.this.mChannelId);
           //SDKCoreFacade.getInstance().setLoginSchemeVersion(SDKBase.this.getLoginSchemeVersion());
-          //SDKBase.this.readConfig(this.val$appId, this.val$appKey, SDKBase.this.getVersion(), this.val$configFileName, SDKBase.this.getConfigReader());
+          SDKBase.this.readConfig(appId, appKey, SDKBase.this.getVersion(), configFileName, SDKBase.this.getConfigReader());
           //SDKBase.this.tryFlash();
           SDKBase.this.doInitImpl();
           return;
@@ -82,7 +82,13 @@ public abstract class SDKBase extends SDKImpl
         }
       }
     });
-  }  
+  } 
+  
+  private void onOnesdkInitSuccess()
+  {
+    this.mOnesdkInitState = InitState.success;
+    notifyInitResult();
+  } 
   
   protected void readConfig(int appId, String appKey, String version, String configFileName, ConfigReader configReader)
     throws JSONException
