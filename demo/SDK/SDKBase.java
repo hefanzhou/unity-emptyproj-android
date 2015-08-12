@@ -198,7 +198,7 @@ public abstract class SDKBase extends SDKImpl
     {
       public void run()
       {
-        //SDKBase.access$1102(SDKBase.this, true);
+        SDKBase.this.setHasLogin(true);
         //SDKBase.this.mLoginCallBack.succeed(SDKBase.this.getUserId(), SDKBase.this.getToken(), SDKBase.this.getPassword(), msg);
         //SDKBase.this.showFloatView(SDKBase.getActivity(), SDKBase.this.getFloatViewPlace());
       }

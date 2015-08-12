@@ -35,7 +35,6 @@ public class ZLPlayerActivity extends UnityPlayerActivity {
 			public void initSucceed(String extraJson) {
 				LogUtil.d(TAG, "initSucceed");
 				Toast.makeText(mContext, "initSucceed, extraJson:" + extraJson, Toast.LENGTH_LONG).show();
-				login();
 			}
 
 			@Override
@@ -83,6 +82,10 @@ public class ZLPlayerActivity extends UnityPlayerActivity {
 		});		
 		
 		
+	}
+	
+	protected void logout() {
+		SDKBase.getInstance(this).doLogout();
 	}
 	
 	
