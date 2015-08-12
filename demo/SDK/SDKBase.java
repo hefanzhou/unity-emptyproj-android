@@ -13,6 +13,10 @@ import com.zulong.sdk.core.util.Toast;
 import com.zulong.sdk.core.config.ConfigReader;
 import com.zulong.sdk.core.ui.floatview.FloatViewItem;
 import com.zulong.sdk.core.bean.Account;
+import com.zulong.sdk.core.param.BaseLoginParams;
+import com.zulong.sdk.core.task.LoginTask;
+
+
 
 public abstract class SDKBase extends SDKImpl
 {
@@ -191,6 +195,12 @@ public abstract class SDKBase extends SDKImpl
           SDKBase.this.doLoginImpl();
       }
     });
+  }
+  
+  protected void loginCommonSDK(Activity activity, BaseLoginParams loginParams, LoginTask.LoginCallBack callback)
+  {
+		LoginTask task = new LoginTask(activity,loginParams,callback);
+		task.doTask();
   }
   
   
