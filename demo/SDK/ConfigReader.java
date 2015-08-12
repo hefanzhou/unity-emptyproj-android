@@ -92,21 +92,21 @@ public abstract class ConfigReader
     readConfig(readFilePath(configFilePath));
   }
 
-  private void readConfig(String preDecode2)
+  private void readConfig(String configStr)
     throws JSONException
   {
-    if (TextUtils.isEmpty(preDecode2))
+    if (TextUtils.isEmpty(configStr))
     {
       LogUtil.e(TAG, "ConfigFile's content is null or \"\"");
       return;
     }
-    String preDecode3 = decodeFromString(preDecode2);
-    LogUtil.d(TAG, "File raw: " + preDecode3);
-    HashMap<String, String>  preDecode = getMetaString(preDecode3);
-    this.mMeta = getMeta((String)preDecode.get("meta"));
-    this.mInitConfig = readInitParams((String)preDecode.get("init"));
-    this.mLoginConfig = readLoginParams((String)preDecode.get("login"));
-    this.mPayConfig = readPayParams((String)preDecode.get("pay"));
+    String preDecode = decodeFromString(configStr);
+    LogUtil.d(TAG, "File raw: " + preDecode);
+    HashMap<String, String>  metamap = getMetaString(preDecode);
+    this.mMeta = getMeta((String)metamap.get("meta"));
+    this.mInitConfig = readInitParams((String)metamap.get("init"));
+    this.mLoginConfig = readLoginParams((String)metamap.get("login"));
+    this.mPayConfig = readPayParams((String)metamap.get("pay"));
     validatePackageName();
     validateVersion();
     validateParams();
