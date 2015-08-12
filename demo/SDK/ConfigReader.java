@@ -7,7 +7,8 @@ import android.util.Base64;
 import com.zulong.sdk.core.param.Param;
 import com.zulong.sdk.core.util.LogUtil;
 
-import java.io.File;
+import java.io.*;
+import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -169,6 +170,7 @@ public abstract class ConfigReader
   private HashMap<String, Param> getMeta(String meta)
     throws JSONException
   {
+  	LogUtil.e(TAG,"meta string:"+meta);
     HashMap localHashMap = new HashMap();
     JSONObject json = new JSONObject(meta);
     localHashMap.put("version", new Param("version", json.getString("version"), true));
@@ -183,24 +185,47 @@ public abstract class ConfigReader
   {
     HashMap localHashMap = new HashMap(4);
     JSONObject json = new JSONObject(raw);
-    localHashMap.put("meta", json.getString("meta"));
-    localHashMap.put("init", json.getString("init"));
-    localHashMap.put("login", json.getString("login"));
-    localHashMap.put("pay", json.getString("pay"));
+    localHashMap.put("meta", json.getJSONObject("meta").toString());
+    localHashMap.put("init", json.getJSONObject("init").toString());
+    localHashMap.put("login", json.getJSONObject("login").toString());
+    localHashMap.put("pay", json.getJSONObject("pay").toString());
     return localHashMap;
+  }
+  
+  
+  private String readContent(InputStream in)
+  {  
+  	try {
+  		ByteArrayOutputStream out = new ByteArrayOutputStream();
+  		byte[] buffer = new byte[4096];
+  		int count = 0;
+  		while((count = in.read(buffer)) > 0) {
+  			out.write(buffer,0,count);
+  		}
+  		in.close();
+  		LogUtil.d(TAG,"config:"+ out.toString());
+  		return out.toString();
+  	}
+    catch (IOException localIOException)
+    {
+      localIOException.printStackTrace();
+    }
+  	catch(Exception e) {
+  		LogUtil.e(TAG, "failed to read config file");
+  	} 
+  	return null;
   }
 
   private String readFile(String configFileName)
   {
-//    try
-//    {
-//      //return e.b(this.mContext.getAssets().open(configFileName));
-//      return "";
-//    }
-//    catch (IOException localIOException)
-//    {
-//      localIOException.printStackTrace();
-//    }
+    try
+    {
+      return readContent(this.mContext.getAssets().open(configFileName));
+    }
+    catch (IOException localIOException)
+    {
+      localIOException.printStackTrace();
+    }
     return null;
   }
 
@@ -211,8 +236,7 @@ public abstract class ConfigReader
       File localFile;
       if (!(localFile = new File(filePath)).exists())
         throw new FileNotFoundException("file not fond: " + filePath);
-      //return e.b(new FileInputStream(localFile));
-      return "";
+      return readContent(new FileInputStream(localFile));
     }
     catch (FileNotFoundException localFileNotFoundException)
     {
@@ -227,10 +251,8 @@ public abstract class ConfigReader
 
   private String decodeFromString(String body)
   {
-    String tmp4_1 = this.mAppKey;
-    String str = tmp4_1.substring((str = tmp4_1).length() - 16, str.length());
-    //return new String(d.a(Base64.decode(body, 2), str));
-    return "";
+  	
+		return body;
   }
 
   public void setBasic(int appId, String appKey, String version)

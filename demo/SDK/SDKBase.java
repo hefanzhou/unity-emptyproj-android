@@ -12,6 +12,8 @@ import com.zulong.sdk.core.config.ConfigReader;
 
 public abstract class SDKBase extends SDKImpl
 {
+	//for test only
+	public static SDKBase  sdk = null;
   private static final String TAG = SDKBase.class.getName();
   private static final String DEFAULT_CONFIG_FILE_NAME = "UniSDK.config";
   private static final long INTERVAL = 2000L;
@@ -42,7 +44,7 @@ public abstract class SDKBase extends SDKImpl
   public static SDKBase getInstance(Activity activity)
   {
     mActivity = activity;
-		return null;
+		return sdk;
   }
 
   public void init(int appId, String appKey, SDKInterface.InitCallBack initCallBack)
