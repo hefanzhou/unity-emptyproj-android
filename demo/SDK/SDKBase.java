@@ -12,6 +12,7 @@ import com.zulong.sdk.core.util.LogUtil;
 import com.zulong.sdk.core.util.Toast;
 import com.zulong.sdk.core.config.ConfigReader;
 import com.zulong.sdk.core.ui.floatview.FloatViewItem;
+import com.zulong.sdk.core.bean.Account;
 
 public abstract class SDKBase extends SDKImpl
 {
@@ -41,6 +42,7 @@ public abstract class SDKBase extends SDKImpl
   private static final String FLASH_PIC_LANDSCAPE = "common_flash_landscape.png";
   private static final int FLASH_TIMER_TIME_MILLISECEND = 3000;
   private HashMap<IntervalType, Long> lastTimeHashMap = new HashMap();
+  private Account  mAccount = null;
 
   //Status  
 	private static enum InitState
@@ -199,8 +201,8 @@ public abstract class SDKBase extends SDKImpl
       public void run()
       {
         SDKBase.this.setHasLogin(true);
-        //SDKBase.this.mLoginCallBack.succeed(SDKBase.this.getUserId(), SDKBase.this.getToken(), SDKBase.this.getPassword(), msg);
-        //SDKBase.this.showFloatView(SDKBase.getActivity(), SDKBase.this.getFloatViewPlace());
+        SDKBase.this.mLoginCallBack.succeed(SDKBase.this.getAccount().getUserId(), SDKBase.this.getAccount().getToken(), SDKBase.this.getAccount().getPassword(), msg);
+        SDKBase.this.showFloatView(SDKBase.getActivity(), SDKBase.this.getFloatViewPlace());
       }
     });
   }
@@ -377,6 +379,19 @@ public abstract class SDKBase extends SDKImpl
   {
     destroyFloatView(getActivity());
     completeCallBack.onComplete();
+  }
+  
+  
+  //Account
+  public Account getAccount()
+  {
+    if (mAccount == null)
+      synchronized (SDKBase.class)
+      {
+        if (mAccount == null)
+          mAccount = new Account();
+      }
+    return mAccount;
   }
   
   //
