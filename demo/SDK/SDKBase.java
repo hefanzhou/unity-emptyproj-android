@@ -143,29 +143,6 @@ public abstract class SDKBase extends SDKImpl
   {
     return mActivity;
   }
-
-   protected void logoutSucceed()
-  {
-    getActivity().runOnUiThread(new Runnable()
-    {
-      public void run()
-      {
-        SDKBase.this.mLogoutCallBack.succeed();
-        //SDKBase.this.dismissFloatView(SDKBase.getActivity());
-      }
-    });
-  }
-
-  protected void logoutFailed(final String msg)
-  {
-    getActivity().runOnUiThread(new Runnable()
-    {
-      public void run()
-      {
-        SDKBase.this.mLogoutCallBack.failed(msg);
-      }
-    });
-  }
   
   protected void initSucceed(String msg)
   {
@@ -198,15 +175,16 @@ public abstract class SDKBase extends SDKImpl
     });
   }  
   
+  //login
   public void doLogin(final SDKInterface.LoginCallBack loginCallBack)
   {
     getActivity().runOnUiThread(new Runnable()
     {
       public void run()
       {
-        if (SDKBase.this.mLoginCallBack == null)
+        if (loginCallBack == null)
           throw new RuntimeException("loginCallBack is null");
-        SDKBase.this.mLoginCallBack = SDKBase.this.mLoginCallBack;
+        SDKBase.this.mLoginCallBack = loginCallBack;
         if ((SDKBase.this.checkInterval(SDKBase.IntervalType.LOGIN)) && (SDKBase.this.checkInit()))
           SDKBase.this.doLoginImpl();
       }
@@ -249,7 +227,55 @@ public abstract class SDKBase extends SDKImpl
     });
   }
   
+  //logout
+  public void doLogout()
+  {
+    doLogout(this.mLogoutCallBack);
+  }
   
+  public void doLogout(final SDKInterface.LogoutCallBack logoutCallBack)
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        if (logoutCallBack == null)
+          throw new RuntimeException("logoutCallBack is null");
+        SDKBase.this.mLogoutCallBack = logoutCallBack;
+        if ((SDKBase.this.checkInterval(SDKBase.IntervalType.LOGOUT)) && (SDKBase.this.checkInit()) && (SDKBase.this.checkLogin()))
+          SDKBase.this.doLogoutImpl();
+      }
+    });
+  }
+  
+  public void setLogoutCallBack(SDKInterface.LogoutCallBack logoutCallBack)
+  {
+    this.mLogoutCallBack = logoutCallBack;
+  }
+  
+  protected void logoutSucceed()
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        //SDKBase.access$1102(SDKBase.this, false);
+        SDKBase.this.mLogoutCallBack.succeed();
+        SDKBase.this.dismissFloatView(SDKBase.getActivity());
+      }
+    });
+  }
+
+  protected void logoutFailed(final String msg)
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        SDKBase.this.mLogoutCallBack.failed(msg);
+      }
+    });
+  }  
   
   //GUI
   private void showFloatView(Context con, int floatViewPlace)

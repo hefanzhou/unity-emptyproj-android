@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.content.Context;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.zulong.unisdk.CommonSDK;
 import com.zulong.sdk.core.open.SDKBase;
 import com.zulong.sdk.core.open.SDKInterface;
 import com.zulong.sdk.core.util.LogUtil;
-import com.zulong.sdk.core.util.Toast;
+
 
 public class ZLPlayerActivity extends UnityPlayerActivity {
 	
@@ -33,15 +34,55 @@ public class ZLPlayerActivity extends UnityPlayerActivity {
 			@Override
 			public void initSucceed(String extraJson) {
 				LogUtil.d(TAG, "initSucceed");
-				Toast.makeToast(mContext, "initSucceed, extraJson:" + extraJson);
+				Toast.makeText(mContext, "initSucceed, extraJson:" + extraJson, Toast.LENGTH_LONG).show();
+				login();
 			}
 
 			@Override
 			public void initFailed(String reason) {
 				LogUtil.d(TAG, "initFailed");
-				Toast.makeToast(mContext, "initFailed, reason:" + reason);
+				Toast.makeText(mContext, "initFailed, reason:" + reason, Toast.LENGTH_LONG).show();
 			}
 		});
+		
+		SDKBase.getInstance(this).setLogoutCallBack(new SDKInterface.LogoutCallBack() {
+
+			@Override
+			public void succeed() {
+				Toast.makeText(getApplicationContext(), "logout succeed", Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void failed(String msg) {
+				Toast.makeText(getApplicationContext(), "logout failed,msg: " + msg, Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+	
+	protected void login() {
+		SDKBase.getInstance(this).doLogin(new SDKInterface.LoginCallBack() {
+
+			@Override
+			public void succeed(String userId, String token, String password, String msg) {
+
+				Toast.makeText(
+						mContext,
+						"userId: " + userId + "\n" + "token: " + token + "\n" + "password: " + password + "\n"
+								+ "msg: " + msg, Toast.LENGTH_LONG).show();
+			}
+
+			@Override
+			public void failed(String msg) {
+				Toast.makeText(mContext, "login failed, msg:" + msg, Toast.LENGTH_LONG).show();
+			}
+
+			@Override
+			public void cancelled() {
+				Toast.makeText(mContext, "login cancelled", Toast.LENGTH_LONG).show();
+			}
+		});		
+		
+		
 	}
 	
 	
@@ -50,7 +91,7 @@ public class ZLPlayerActivity extends UnityPlayerActivity {
 		if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
 			LogUtil.d(TAG,"on back button");
 			if(event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0)
-				Toast.makeToast(mContext, "click me");
+				Toast.makeText(mContext, "click me", Toast.LENGTH_LONG).show();
 			return true;
 		}
 		return super.dispatchKeyEvent(event);
