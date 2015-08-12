@@ -4,11 +4,14 @@ import android.app.Activity;
 import java.util.HashMap;
 import java.util.Timer;
 import android.text.TextUtils;
+import android.content.Context;
 import org.json.JSONException;
 
 import com.zulong.sdk.core.open.SDKInterface;
 import com.zulong.sdk.core.util.LogUtil;
+import com.zulong.sdk.core.util.Toast;
 import com.zulong.sdk.core.config.ConfigReader;
+import com.zulong.sdk.core.ui.floatview.FloatViewItem;
 
 public abstract class SDKBase extends SDKImpl
 {
@@ -39,7 +42,21 @@ public abstract class SDKBase extends SDKImpl
   private static final int FLASH_TIMER_TIME_MILLISECEND = 3000;
   private HashMap<IntervalType, Long> lastTimeHashMap = new HashMap();
 
+  //Status  
+	private static enum InitState
+  {
+    success, process, fail;
+  }
 
+  private static enum IntervalType
+  {
+    INIT, LOGIN, PAY, LOGOUT;
+  }
+
+  public static enum UserInfoType
+  {
+    CREATE_ROLE, LOGIN, ROLE_LEVEL_CHANGE;
+  }
 
   public static SDKBase getInstance(Activity activity)
   {
@@ -57,8 +74,8 @@ public abstract class SDKBase extends SDKImpl
     this.mInitCallBack = initCallBack;
     this.mAppId = appId;
     this.mAppKey = appKey;
-    //this.mChannelId = getChannelId();
-    //this.mChannelName = getChannelName();
+    this.mChannelId = getChannelId();
+    this.mChannelName = getChannelName();
     LogUtil.d(TAG, "channelId : " + this.mChannelId + "\nchannelName : " + this.mChannelName);
     getActivity().runOnUiThread(new Runnable()
     {
@@ -232,6 +249,71 @@ public abstract class SDKBase extends SDKImpl
     });
   }
   
+  
+  
+  //GUI
+  private void showFloatView(Context con, int floatViewPlace)
+  {
+    FloatViewItem[] arrayOfFloatViewItem;
+    if ((arrayOfFloatViewItem = getFloatViewItemImpl()) != null)
+    {
+      //c.a().a(con, floatViewPlace, arrayOfFloatViewItem);
+      return;
+    }
+    showFloatViewImpl();
+  }
+
+  private void dismissFloatView(Context con)
+  {
+    if (getFloatViewItemImpl() != null)
+    {
+      //c.a().a(con);
+      return;
+    }
+    dismissFloatViewImpl();
+  }
+
+  private void destroyFloatView(Context con)
+  {
+    if (getFloatViewItemImpl() != null)
+    {
+      //c.a().b(con);
+      return;
+    }
+    destroyFloatViewImpl();
+  }
+
+  protected void showFloatViewImpl()
+  {
+  }
+
+  protected void dismissFloatViewImpl()
+  {
+  }
+
+  protected void destroyFloatViewImpl()
+  {
+  }
+
+  protected FloatViewItem[] getFloatViewItemImpl()
+  {
+    return null;
+  }
+
+  protected int getFloatViewPlace()
+  {
+    return 1;
+  }
+  
+  
+  //check functions
+  private boolean checkLogin()
+  {
+    if (!this.mHasLogin)
+      Toast.makeToast(getActivity(), "Î´µÇÂ¼");
+    return this.mHasLogin;
+  }
+  
   private boolean checkInit()
   {
     if ((this.mOnesdkInitState != InitState.success) || (this.mChannelInitState != InitState.success))
@@ -253,25 +335,29 @@ public abstract class SDKBase extends SDKImpl
     return false;
   }
   
+  //login
+  protected boolean isHasLogin()
+  {
+    return this.mHasLogin;
+  }
+
+  protected void setHasLogin(boolean hasLogin)
+  {
+    this.mHasLogin = hasLogin;
+  }
+  
+  //Event callback
+  public void onDestroy(SDKInterface.CompleteCallBack completeCallBack)
+  {
+    destroyFloatView(getActivity());
+    completeCallBack.onComplete();
+  }
+  
+  //
   protected abstract ConfigReader getConfigReader();
   public abstract int getChannelId();
   public abstract String getChannelName();
   protected abstract String getVersion();
 
-  
-  //Status  
-	private static enum InitState
-  {
-    success, process, fail;
-  }
-
-  private static enum IntervalType
-  {
-    INIT, LOGIN, PAY, LOGOUT;
-  }
-
-  public static enum UserInfoType
-  {
-    CREATE_ROLE, LOGIN, ROLE_LEVEL_CHANGE;
-  }
+ 
 }
