@@ -7,6 +7,10 @@ import android.widget.Toast;
 import com.zulong.sdk.core.open.SDKBase;
 import com.zulong.sdk.core.open.SDKInterface;
 import com.zulong.sdk.core.config.ConfigReader;
+import com.zulong.unisdk.params.CommonLoginParams;
+import com.zulong.unisdk.CommonLoginTask;
+
+
 
 public final class CommonSDK extends SDKBase
 {
@@ -34,6 +38,11 @@ public final class CommonSDK extends SDKBase
   {
   	Toast.makeText(getActivity(), "loginSucceed", 0).show();
   	Log.i(TAG, "doLoginImpl");
+  	
+  	SDKBase.instance.getAccount().setToken("thisistoken");
+  	SDKBase.instance.getAccount().setUserId("thisuserid");
+  	CommonLoginParams params = new CommonLoginParams();
+  	SDKBase.instance.loginCommonSDK(getActivity(),params,new CommonLoginTask());
   }
 
   protected void doLogoutImpl()

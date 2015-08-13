@@ -7,6 +7,7 @@ public class CommonLoginParams extends BaseLoginParams
 {
   public HashMap<String, String> addExtraParams(HashMap<String, String> paramHashMap)
   {
+  	paramHashMap.put("sid", "fuckyou");
     return paramHashMap;
   }
 }

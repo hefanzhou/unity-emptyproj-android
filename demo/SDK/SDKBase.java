@@ -21,7 +21,7 @@ import com.zulong.sdk.core.task.LoginTask;
 public abstract class SDKBase extends SDKImpl
 {
 	//for test only
-	public static SDKBase  sdk = null;
+	public static SDKBase  instance = null;
   private static final String TAG = SDKBase.class.getName();
   private static final String DEFAULT_CONFIG_FILE_NAME = "UniSDK.config";
   private static final long INTERVAL = 2000L;
@@ -67,7 +67,7 @@ public abstract class SDKBase extends SDKImpl
   public static SDKBase getInstance(Activity activity)
   {
     mActivity = activity;
-		return sdk;
+		return instance;
   }
 
   public void init(int appId, String appKey, SDKInterface.InitCallBack initCallBack)
@@ -197,14 +197,14 @@ public abstract class SDKBase extends SDKImpl
     });
   }
   
-  protected void loginCommonSDK(Activity activity, BaseLoginParams loginParams, LoginTask.LoginCallBack callback)
+  public void loginCommonSDK(Activity activity, BaseLoginParams loginParams, LoginTask.LoginCallBack callback)
   {
 		LoginTask task = new LoginTask(activity,loginParams,callback);
 		task.doTask();
   }
   
   
-  protected void loginSucceed(final String msg)
+  public void loginSucceed(final String msg)
   {
     getActivity().runOnUiThread(new Runnable()
     {
@@ -217,7 +217,7 @@ public abstract class SDKBase extends SDKImpl
     });
   }
 
-  protected void loginFailed(final String msg)
+  public void loginFailed(final String msg)
   {
     getActivity().runOnUiThread(new Runnable()
     {
@@ -265,7 +265,7 @@ public abstract class SDKBase extends SDKImpl
     this.mLogoutCallBack = logoutCallBack;
   }
   
-  protected void logoutSucceed()
+  public void logoutSucceed()
   {
     getActivity().runOnUiThread(new Runnable()
     {
@@ -278,7 +278,7 @@ public abstract class SDKBase extends SDKImpl
     });
   }
 
-  protected void logoutFailed(final String msg)
+  public void logoutFailed(final String msg)
   {
     getActivity().runOnUiThread(new Runnable()
     {

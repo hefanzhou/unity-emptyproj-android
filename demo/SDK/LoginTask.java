@@ -2,6 +2,7 @@ package com.zulong.sdk.core.task;
 
 import android.app.Activity;
 import java.util.HashMap;
+import org.json.JSONObject;
 
 import com.zulong.sdk.core.param.BaseLoginParams;
 
@@ -18,7 +19,8 @@ public class LoginTask
 
 	public void doTask() {
 		HashMap<String, String> extraParams = params.getExtraParams();
-		this.cb.succeed("");
+		JSONObject json = new JSONObject(extraParams);
+		this.cb.succeed(json.toString());
 	}
 
   public static abstract interface LoginCallBack
