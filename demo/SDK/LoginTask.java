@@ -18,9 +18,11 @@ public class LoginTask
   }
 
 	public void doTask() {
+		//在这里向unisdkServer发起验证
 		HashMap<String, String> extraParams = params.getExtraParams();
-		JSONObject json = new JSONObject(extraParams);
-		this.cb.succeed(json.toString());
+		//JSONObject json = new JSONObject(extraParams);
+		String msg = "you are welcome"; //this msg come from unisdkserver
+		this.cb.succeed(msg);
 	}
 
   public static abstract interface LoginCallBack
