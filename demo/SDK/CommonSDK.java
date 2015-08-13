@@ -36,7 +36,7 @@ public final class CommonSDK extends SDKBase
 
   protected void doLoginImpl()
   {
-  	Toast.makeText(getActivity(), "loginSucceed", 0).show();
+  	//Toast.makeText(getActivity(), "loginSucceed", 0).show();
   	Log.i(TAG, "doLoginImpl");
   	
   	SDKBase.instance.getAccount().setToken("thisistoken");
@@ -47,7 +47,7 @@ public final class CommonSDK extends SDKBase
 
   protected void doLogoutImpl()
   {
-    Toast.makeText(getActivity(), "logoutSucceed", 0).show();
+    //Toast.makeText(getActivity(), "logoutSucceed", 0).show();
     logoutSucceed();
 		Log.i(TAG, "doLogoutImpl");
   }
