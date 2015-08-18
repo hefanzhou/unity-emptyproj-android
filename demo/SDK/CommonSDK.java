@@ -40,10 +40,10 @@ public final class CommonSDK extends SDKBase
   	//Toast.makeText(getActivity(), "loginSucceed", 0).show();
   	Log.i(TAG, "doLoginImpl");
   	
-  	SDKBase.instance.getAccount().setToken("thisistoken");
-  	SDKBase.instance.getAccount().setUserId("thisuserid");
+  	getAccount().setToken("thisistoken");
+  	getAccount().setUserId("thisuserid");
   	CommonLoginParams params = new CommonLoginParams();
-  	SDKBase.instance.loginCommonSDK(getActivity(),params,new CommonLoginTask());
+  	loginCommonSDK(getActivity(),params,new CommonLoginTask());
   }
 
   protected void doLogoutImpl()

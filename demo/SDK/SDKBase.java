@@ -16,6 +16,7 @@ import com.zulong.sdk.core.bean.Account;
 import com.zulong.sdk.core.param.BaseLoginParams;
 import com.zulong.sdk.core.task.LoginTask;
 import com.zulong.sdk.core.task.PayTask;
+import com.zulong.sdk.core.param.Param;
 import com.zulong.sdk.core.param.OrderParams;
 import com.zulong.sdk.core.param.BaseOrderParams;
 
@@ -24,7 +25,6 @@ import com.zulong.sdk.core.param.BaseOrderParams;
 public abstract class SDKBase extends SDKImpl
 {
 	//for test only
-	public static SDKBase  instance = null;
   private static final String TAG = SDKBase.class.getName();
   private static final String DEFAULT_CONFIG_FILE_NAME = "UniSDK.config";
   private static final long INTERVAL = 2000L;
@@ -43,7 +43,7 @@ public abstract class SDKBase extends SDKImpl
   protected SDKInterface.LogoutCallBack mLogoutCallBack;
   private ConfigReader mConfigReader;
   private String mConfigFilePath;
-  private static volatile SDKBase INSTANCE;
+  public static volatile SDKBase INSTANCE;
   private String commonOrderMsg;
   private String commonOrderId;
   private static final String FLASH_PIC_PORTRAIT = "common_flash_portrait.png";
@@ -71,7 +71,7 @@ public abstract class SDKBase extends SDKImpl
   public static SDKBase getInstance(Activity activity)
   {
     mActivity = activity;
-		return instance;
+		return INSTANCE;
   }
 
   public void init(int appId, String appKey, SDKInterface.InitCallBack initCallBack)
@@ -385,6 +385,21 @@ public abstract class SDKBase extends SDKImpl
     task.doTask();
   }
   
+  //
+  protected HashMap<String, Param> getInitConfig()
+  {
+    return this.mConfigReader.getInitConfig();
+  }
+
+  protected HashMap<String, Param> getLoginConfig()
+  {
+    return this.mConfigReader.getLoginConfig();
+  }
+
+  protected HashMap<String, Param> getPayConfig()
+  {
+    return this.mConfigReader.getPayConfig();
+  }  
   
   //GUI
   private void showFloatView(Context con, int floatViewPlace)

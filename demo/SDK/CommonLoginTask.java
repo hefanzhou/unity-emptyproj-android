@@ -8,12 +8,12 @@ class CommonLoginTask implements LoginTask.LoginCallBack {
 	
     public void succeed(String paramString) {
     	
-    	SDKBase.instance.loginSucceed(paramString);
+    	SDKBase.INSTANCE.loginSucceed(paramString);
     }
 
     public void failed(String paramString)  {
     	
-    	SDKBase.instance.loginFailed(paramString);
+    	SDKBase.INSTANCE.loginFailed(paramString);
     }
 	
 	

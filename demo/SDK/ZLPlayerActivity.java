@@ -26,7 +26,7 @@ public class ZLPlayerActivity extends UnityPlayerActivity {
 		super.onCreate(savedInstanceState);
 		
 		LogUtil.setLOG(true);
-		SDKBase.instance = new CommonSDK();
+		SDKBase.INSTANCE = new CommonSDK();
 		SDKBase.getInstance(this);
 		
 		LogUtil.d("ZLPlayerActivity","onCreate called!");
