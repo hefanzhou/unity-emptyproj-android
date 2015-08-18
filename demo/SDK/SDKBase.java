@@ -382,6 +382,7 @@ public abstract class SDKBase extends SDKImpl
         Toast.makeToast(SDKBase.getActivity(), "common order failed,msg: " + msg);
       }
     });
+    task.doTask();
   }
   
   
