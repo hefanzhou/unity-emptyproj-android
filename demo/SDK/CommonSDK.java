@@ -9,7 +9,8 @@ import com.zulong.sdk.core.open.SDKInterface;
 import com.zulong.sdk.core.config.ConfigReader;
 import com.zulong.unisdk.params.CommonLoginParams;
 import com.zulong.unisdk.CommonLoginTask;
-
+import com.zulong.sdk.core.open.SDKInterface.PayCallBack;
+import com.zulong.sdk.core.param.OrderParams;
 
 
 public final class CommonSDK extends SDKBase
@@ -19,10 +20,10 @@ public final class CommonSDK extends SDKBase
   private static final String TAG = CommonSDK.class.getName();
   private static final String VERSION = "0.0.1";
 
-//  private boolean validateOrderParams(OrderParams paramOrderParams)
-//  {
-//		return true;
-//  }
+  private boolean validateOrderParams(OrderParams paramOrderParams)
+  {
+		return true;
+  }
 
   protected void destroyFloatViewImpl()
   {
@@ -52,15 +53,18 @@ public final class CommonSDK extends SDKBase
 		Log.i(TAG, "doLogoutImpl");
   }
 
-//  public void doPay(OrderParams paramOrderParams, SDKInterface.PayCallBack paramPayCallBack)
-//  {
-//		Log.i(TAG, "doPay");
-//  }
+  public void doPay(OrderParams paramOrderParams, SDKInterface.PayCallBack paramPayCallBack)
+  {
+    if (!validateOrderParams(paramOrderParams))
+      return;
+    super.doPay(paramOrderParams, paramPayCallBack);  	
+		Log.i(TAG, "doPay");
+  }
 
-//  protected void doPayImpl(OrderParams paramOrderParams)
-//  {
-//    paySucceed("paySucceed");
-//  }
+  protected void doPayImpl(OrderParams paramOrderParams)
+  {
+    paySucceed("paySucceed");
+  }
 
   public int getChannelId()
   {

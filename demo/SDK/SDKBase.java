@@ -15,6 +15,9 @@ import com.zulong.sdk.core.ui.floatview.FloatViewItem;
 import com.zulong.sdk.core.bean.Account;
 import com.zulong.sdk.core.param.BaseLoginParams;
 import com.zulong.sdk.core.task.LoginTask;
+import com.zulong.sdk.core.task.PayTask;
+import com.zulong.sdk.core.param.OrderParams;
+import com.zulong.sdk.core.param.BaseOrderParams;
 
 
 
@@ -42,6 +45,7 @@ public abstract class SDKBase extends SDKImpl
   private String mConfigFilePath;
   private static volatile SDKBase INSTANCE;
   private String commonOrderMsg;
+  private String commonOrderId;
   private static final String FLASH_PIC_PORTRAIT = "common_flash_portrait.png";
   private static final String FLASH_PIC_LANDSCAPE = "common_flash_landscape.png";
   private static final int FLASH_TIMER_TIME_MILLISECEND = 3000;
@@ -288,6 +292,98 @@ public abstract class SDKBase extends SDKImpl
       }
     });
   }  
+  
+  //Pay
+  public void doPay(final OrderParams orderParams,final SDKInterface.PayCallBack payCallBack)
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        if (payCallBack == null)
+          throw new RuntimeException("payCallBack is null");
+        SDKBase.this.mPayCallBack = payCallBack;
+        if ((SDKBase.this.checkInterval(SDKBase.IntervalType.PAY)) && (SDKBase.this.checkInit()) && (SDKBase.this.checkLogin()))
+          SDKBase.this.commonOrder(orderParams);
+      }
+    });
+  }
+  
+  protected void paySucceed(final String msg)
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        SDKBase.this.mPayCallBack.succeed(SDKBase.this.getCommonOrderId(), msg);
+      }
+    });
+  }
+
+  protected void payFailed(final String msg)
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        SDKBase.this.mPayCallBack.failed("", msg);
+      }
+    });
+  }
+
+  protected void payCancelled(final String msg)
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        SDKBase.this.mPayCallBack.cancelled("",msg);
+      }
+    });
+  }
+
+  protected void payOrdered(final String msg)
+  {
+    getActivity().runOnUiThread(new Runnable()
+    {
+      public void run()
+      {
+        SDKBase.this.mPayCallBack.ordered(SDKBase.this.getCommonOrderId(), msg);
+      }
+    });
+  }
+  
+  public String getCommonOrderMsg()
+  {
+    return this.commonOrderMsg;
+  }
+  
+  public String getCommonOrderId()
+  {
+    return this.commonOrderId;
+  }  
+  
+  private void commonOrder(final OrderParams orderParams)
+  {
+		PayTask task = new PayTask(getActivity(), orderParams,new PayTask.PayCallBack()
+    {
+      public void succeed(String commonOrderId, String msg)
+      {
+        LogUtil.d(SDKBase.TAG, "SDKBase.getInstance().doPay succeed: commonOrderId: " + commonOrderId + " msg: " + msg);
+        SDKBase.this.commonOrderMsg = msg;
+        SDKBase.this.commonOrderId = commonOrderId;
+        SDKBase.this.doPayImpl(orderParams);
+      }
+
+      public void failed(String msg)
+      {
+        LogUtil.d(SDKBase.TAG, "SDKBase.getInstance().doPay failed: msg: " + msg);
+        SDKBase.this.payFailed(msg);
+        Toast.makeToast(SDKBase.getActivity(), "common order failed,msg: " + msg);
+      }
+    });
+  }
+  
   
   //GUI
   private void showFloatView(Context con, int floatViewPlace)
