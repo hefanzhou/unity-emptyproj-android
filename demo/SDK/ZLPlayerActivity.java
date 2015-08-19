@@ -7,6 +7,7 @@ import android.util.Log;
 import android.content.Context;
 import android.view.KeyEvent;
 import android.widget.Toast;
+import android.content.Intent;
 
 import com.zulong.unisdk.CommonSDK;
 import com.zulong.sdk.core.open.SDKBase;
@@ -238,6 +239,116 @@ public class ZLPlayerActivity extends UnityPlayerActivity {
 		orderParams.setCurrencyName("元宝");
 
 	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		SDKBase.getInstance(this).onStart(new SDKInterface.CompleteCallBack() {
+
+			@Override
+			public void onComplete() {
+
+			}
+		});
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		SDKBase.getInstance(this).onPause(new SDKInterface.CompleteCallBack() {
+			@Override
+			public void onComplete() {
+
+			}
+		});
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		SDKBase.getInstance(this).onResume(new SDKInterface.CompleteCallBack() {
+			@Override
+			public void onComplete() {
+
+			}
+		});
+	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		SDKBase.getInstance(this).onRestart(new SDKInterface.CompleteCallBack() {
+
+			@Override
+			public void onComplete() {
+
+			}
+		});
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		SDKBase.getInstance(this).onStop(new SDKInterface.CompleteCallBack() {
+			@Override
+			public void onComplete() {
+
+			}
+		});
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		SDKBase.getInstance(this).onDestroy(new SDKInterface.CompleteCallBack() {
+			@Override
+			public void onComplete() {
+				/** VM exiting after onDestroy */
+				System.exit(0);
+			}
+		});
+	}
+	
+	@Override
+	public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+		return SDKBase.getInstance(this).onKeyDown(keyCode, event, new SDKInterface.CompleteCallBack() {
+			@Override
+			public void onComplete() {
+				if (keyCode == KeyEvent.KEYCODE_BACK) {
+					/** 在此进行游戏的资源释放、退出游戏等操作 */
+					/**
+					 * release your game's resource or exit game etc
+					 */
+					//finish();
+				}
+			}
+		});
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		SDKBase.getInstance(this).onActivityResult(requestCode, resultCode, data, new SDKInterface.CompleteCallBack() {
+
+			@Override
+			public void onComplete() {
+
+			}
+		});
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		SDKBase.getInstance(this).onNewIntent(intent, new SDKInterface.CompleteCallBack() {
+
+			@Override
+			public void onComplete() {
+
+			}
+		});
+	}
+
 
 
 	@Override
