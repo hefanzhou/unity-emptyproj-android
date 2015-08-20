@@ -1,5 +1,7 @@
 # unity-emptyproj-android
 
+UniSDK的代码在demo/SDK目录下
+
 按以下步骤接入自己的sdk
 
 .	把UniSDK.config的内容替换成自己的内容，格式参加此文件原始内容
